@@ -1,8 +1,8 @@
 
 using Microsoft.AspNetCore.Mvc;
 
-using SMS.Data.Models;
-using SMS.Data.Services;
+using SMS.Data.Models; //student lives here
+using SMS.Data.Services;//service lives here
 
 namespace SMS.Web.Controllers
 {
@@ -12,16 +12,16 @@ namespace SMS.Web.Controllers
 
         public StudentController()
         {
-            svc = new StudentServiceDb();
-        }
+            svc = new StudentServiceDb();//initialized the service
+        }//this controller cannot operate without this service(hard coupling-bad)
 
         // GET /student
         public IActionResult Index()
         {
             // TBC - load students using service and pass to view
            
-            
-            return View();
+            var students = svc.GetStudents();
+            return View(students);
         }
 
         // GET /student/details/{id}
@@ -31,7 +31,10 @@ namespace SMS.Web.Controllers
             var s = svc.GetStudent(id);
 
             // TBC check if s is null and return NotFound()
-            
+            if(s == null)
+            {
+                return NotFound();
+            }
 
             // pass student as parameter to the view
             return View(s);
@@ -52,6 +55,7 @@ namespace SMS.Web.Controllers
             if (ModelState.IsValid)
             {
                 // TBC call service AddStudent method using data in s
+                var student = svc.AddStudent(s.Name,s.Course,s.Email,s.Age,s.Grade,s.PhotoUrl);
                 
                 return RedirectToAction(nameof(Index));
             }
@@ -67,8 +71,10 @@ namespace SMS.Web.Controllers
             var s = svc.GetStudent(id);
 
             // TBC check if s is null and return NotFound()
-              
-
+            if(s == null)
+            {
+                return NotFound();
+            }  
             // pass student to view for editing
             return View(s);
         }
@@ -81,7 +87,7 @@ namespace SMS.Web.Controllers
             if (ModelState.IsValid)
             {
                 // TBC pass data to service to update
-               
+                var student = svc.UpdateStudent(s);
 
                 return RedirectToAction(nameof(Index));
             }
@@ -110,12 +116,12 @@ namespace SMS.Web.Controllers
         public IActionResult DeleteConfirm(int id)
         {
             // TBC delete student via service
-           
+            var s = svc.DeleteStudent(id);
             
             // redirect to the index view
             return RedirectToAction(nameof(Index));
+            
         }
-
-
     }
 }
+
