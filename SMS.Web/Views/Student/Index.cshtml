@@ -1,6 +1,8 @@
 @model IList<Student>
-
+ 
 <h3 class="mb-3">Student List</h3>
+
+<a asp-controller ="Student" asp-action="Create" class="btn btn-primary mb-3">Create</a>
 
 <table class="table table-hover">
     <thead>
@@ -13,14 +15,23 @@
         </tr>
     </thead>
     <tbody>
-
+        @foreach (var s in Model)
+        {   
             <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td>@s.Id</td>  
+                <td>@s.Name</td>
+                <td>@s.Course</td>
+                <td>@s.Age</td>
+                <td>
+                   <a  asp-controller="Student" asp-action="Details" asp-route-id="@s.Id">View</a>
+                </td>
             </tr>
-        
+            
+        }
+            
     </tbody>
 </table>
+
+ <!--//the type here should be the type of the thing we passed to the view(list of students)(at the top) 
+      -want to use razor to get the data from somewhere else
+ & for each student in the model we want to print out the details>
